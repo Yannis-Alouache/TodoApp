@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital@1&display=swap');
+
+* {
+    font-family: 'Space Mono', monospace;
+}
+
+.btn-secondary:not(:disabled):not(.disabled).active {
+    color: #fff;
+    background-color: #373a3c;
+    border-color: #4e555b;
+}
+
+.btn-danger {
+    color: #fff;
+    background-color: #68020b;
+    border-color: #c50011;
+}
+
+.btn-danger:hover {
+    color: #fff;
+    background-color: #8d0a17;
+    border-color: #8d0a17;
+}
+
+.btn-info {
+    color: #fff;
+    background-color: #138496;
+    border-color: #117a8b;
+}
+
+.btn-info:hover {
+    color: #fff;
+    background-color: #159baf;
+    border-color: #159baf;
+}
+
+.not-selectable {
+    user-select: none;
+}
+
+.pointer {
+    cursor: pointer;
+}
