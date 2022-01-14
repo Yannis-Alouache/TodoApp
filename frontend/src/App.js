@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import {
   Card,
   CardBody,
@@ -7,51 +7,16 @@ import {
   CardText,
   Button,
   Row,
-  Col,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Input,
-  Form,
-  FormGroup,
-  Label
+  Col
 } from "reactstrap"
 import DeleteModal from "./Components/DeleteModal";
 import EditModal from "./Components/EditModal";
 import AddModal from "./Components/AddModal";
-
-
-const todoItems = [
-  {
-    id: 1,
-    title: "Go to Market",
-    description: "Buy ingredients to prepare dinner",
-    completed: true,
-  },
-  {
-    id: 2,
-    title: "Study",
-    description: "Read Algebra and History textbook for the upcoming test",
-    completed: false,
-  },
-  {
-    id: 3,
-    title: "Sammy's books",
-    description: "Go to library to return Sammy's books",
-    completed: true,
-  },
-  {
-    id: 4,
-    title: "Article",
-    description: "Write article on how to use Django with React",
-    completed: false,
-  },
-];
+import axios from "axios";
 
 function App() {
   const [viewCompleted, setViewCompleted] = useState(false)
-  const [todoList, setTodoList] = useState(todoItems)
+  const [todoList, setTodoList] = useState(null)
 
   const [completedBtnClass, setCompletedBtnClass] = useState("")
   const [uncompletedBtnClass, setuncompletedBtnClass] = useState("active")
@@ -60,7 +25,15 @@ function App() {
   const [deleteModal, setDeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
 
-  const [currentItem, setCurrentItem] = useState(todoList[0]);
+  const [currentItem, setCurrentItem] = useState(null);
+
+  useEffect(() => {
+    axios.get(process.env.REACT_APP_API_URL + "/api/todos/")
+    .then(res => {
+      setTodoList(res.data)
+      setCurrentItem(res.data[0])
+    })
+  }, [todoList]);
 
   const handleCompletedBtn = () => {
     setViewCompleted(true)
@@ -89,6 +62,8 @@ function App() {
   }
 
   const renderItems = () => {
+    if (!currentItem)
+      return null
     const Items = todoList.filter( (item) => item.completed === viewCompleted)
 
     return Items.map((item) => (
@@ -122,7 +97,7 @@ function App() {
     ));
   }
 
-
+  
   return (
     <main className="container mt-5">
       <h1 className="text-center">My TodoApp</h1>
@@ -151,7 +126,8 @@ function App() {
         </Row>
       </div>
 
-      {renderItems()}
+
+      {todoList ? renderItems() : <div></div>}
 
     </main>
   );

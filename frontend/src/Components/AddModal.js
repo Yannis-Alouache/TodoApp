@@ -23,10 +23,20 @@ function AddModal(props) {
             description: description
         }
 
-        axios.post("/api/todos", {data})
-            .then(res => {
-                console.log(res)
-            })
+        const headers = {
+          'Content-Type': 'application/json'
+        }
+
+        axios.post(process.env.REACT_APP_API_URL + "/api/todos/", data, {
+          headers: headers
+        })
+        .then(res => {
+          if (res.status === 201) {
+            props.toggle()
+            setTitle("")
+            setDescription("")
+          }
+        })
     }
 
     return (
