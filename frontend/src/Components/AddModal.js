@@ -1,4 +1,5 @@
 import {useState} from "react"
+import axios from "axios"
 
 import {
     Button,
@@ -12,13 +13,26 @@ import {
     Label
 } from "reactstrap"
 
-function EditModal(props) {
-    const [isChecked, setIsChecked] = useState(false)
-    
+function AddModal(props) {
+    const [title, setTitle] = useState("")
+    const [description, setDescription] = useState("")
+
+    const handleSubmit = () => {
+        const data = {
+            title: title,
+            description: description
+        }
+
+        axios.post("/api/todos", {data})
+            .then(res => {
+                console.log(res)
+            })
+    }
+
     return (
         <Modal isOpen={props.modal} toggle={props.toggle}>
           <ModalHeader toggle={props.toggle}>
-            Edit Task
+            Add Task
           </ModalHeader>
           <ModalBody>
             <Form>
@@ -30,7 +44,8 @@ function EditModal(props) {
                   id="taskTitle"
                   name="taskTitle"
                   type="text"
-                  value={props.item.title}
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
                 />
               </FormGroup>
               <FormGroup>
@@ -41,21 +56,16 @@ function EditModal(props) {
                   id="taskDescription"
                   name="taskDescription"
                   type="text"
-                  value={props.item.description}
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
                 />
-              </FormGroup>
-              <FormGroup check>
-                <Label check className="not-selectable pointer">
-                  <Input type="checkbox" checked={props.item.completed ? true : false}/>
-                  Completed ?
-                </Label>
               </FormGroup>
             </Form>
           </ModalBody>
           <ModalFooter>
             <Button
               color="success"
-              onClick={function noRefCheck(){}}
+              onClick={() => handleSubmit()}
             >
               Submit
             </Button>
@@ -67,4 +77,4 @@ function EditModal(props) {
     )
 }
 
-export default EditModal;
+export default AddModal;

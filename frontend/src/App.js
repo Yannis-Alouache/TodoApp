@@ -19,6 +19,7 @@ import {
 } from "reactstrap"
 import DeleteModal from "./Components/DeleteModal";
 import EditModal from "./Components/EditModal";
+import AddModal from "./Components/AddModal";
 
 
 const todoItems = [
@@ -55,11 +56,37 @@ function App() {
   const [completedBtnClass, setCompletedBtnClass] = useState("")
   const [uncompletedBtnClass, setuncompletedBtnClass] = useState("active")
 
-  const [modal, setModal] = useState(false);
+  const [addModal, setAddModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
 
   const [currentItem, setCurrentItem] = useState(todoList[0]);
+
+  const handleCompletedBtn = () => {
+    setViewCompleted(true)
+    setuncompletedBtnClass("")
+    setCompletedBtnClass("active")
+  }
+
+  const handleUncompletedBtn = () => {
+    setViewCompleted(false)
+    setCompletedBtnClass("")
+    setuncompletedBtnClass("active")
+  }
+
+  const addToggle = () => setAddModal(!addModal);
+  const deleteToggle = () => setDeleteModal(!deleteModal)
+  const editToggle = () => setEditModal(!editModal)
+
+  const handleDelete = (item) => {
+    setDeleteModal(!deleteModal)
+    setCurrentItem(item)
+  }
+
+  const handleEdit = (item) => {
+    setEditModal(!editModal)
+    setCurrentItem(item)
+  }
 
   const renderItems = () => {
     const Items = todoList.filter( (item) => item.completed === viewCompleted)
@@ -95,88 +122,17 @@ function App() {
     ));
   }
 
-  const handleCompletedBtn = () => {
-    setViewCompleted(true)
-    setuncompletedBtnClass("")
-    setCompletedBtnClass("active")
-  }
-
-  const handleUncompletedBtn = () => {
-    setViewCompleted(false)
-    setCompletedBtnClass("")
-    setuncompletedBtnClass("active")
-  }
-
-  const toggle = () => setModal(!modal);
-  const deleteToggle = () => setDeleteModal(!deleteModal)
-  const editToggle = () => setEditModal(!editModal)
-
-  const handleDelete = (item) => {
-    setDeleteModal(!deleteModal)
-    setCurrentItem(item)
-  }
-
-  const handleEdit = (item) => {
-    setEditModal(!editModal)
-    setCurrentItem(item)
-  }
-
 
   return (
     <main className="container mt-5">
       <h1 className="text-center">My TodoApp</h1>
 
       <div className="mt-3">
-        <Button block={true} onClick={toggle}>
+        <Button block={true} onClick={addToggle}>
           Add Task
         </Button>
-
-        <Modal isOpen={modal} toggle={toggle}>
-          <ModalHeader toggle={toggle}>
-            Add Task
-          </ModalHeader>
-          <ModalBody>
-            <Form>
-              <FormGroup>
-                <Label for="taskTitle">
-                  Task Title
-                </Label>
-                <Input
-                  id="taskTitle"
-                  name="taskTitle"
-                  type="text"
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="taskDescription">
-                  Task Description
-                </Label>
-                <Input
-                  id="taskDescription"
-                  name="taskDescription"
-                  type="text"
-                />
-              </FormGroup>
-              <FormGroup check>
-                <Label check className="not-selectable pointer">
-                  <Input type="checkbox" />
-                  Completed ?
-                </Label>
-              </FormGroup>
-            </Form>
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              color="success"
-              onClick={function noRefCheck(){}}
-            >
-              Submit
-            </Button>
-            <Button onClick={toggle}>
-              Cancel
-            </Button>
-          </ModalFooter>
-        </Modal>
+        <AddModal modal={addModal} toggle={addToggle} item={currentItem} />
+      
       </div>
 
       <div className="mt-5">
