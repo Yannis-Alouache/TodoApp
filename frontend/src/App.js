@@ -12,7 +12,7 @@ import {
 import DeleteModal from "./Components/DeleteModal";
 import EditModal from "./Components/EditModal";
 import AddModal from "./Components/AddModal";
-import axios from "axios";
+import { getList } from "./Services";
 
 function App() {
   const [viewCompleted, setViewCompleted] = useState(false)
@@ -27,13 +27,25 @@ function App() {
 
   const [currentItem, setCurrentItem] = useState(null);
 
+  const [dataReload, setDataReload] = useState(false)
+
   useEffect(() => {
-    axios.get(process.env.REACT_APP_API_URL + "/api/todos/")
-    .then(res => {
-      setTodoList(res.data)
-      setCurrentItem(res.data[0])
-    })
-  }, [todoList]);
+    getList()
+      .then(res => {
+        setTodoList(res.data)
+        setCurrentItem(res.data[0])
+      })
+
+      if (dataReload) {
+        getList()
+        .then(res => {
+          setTodoList(res.data)
+          setCurrentItem(res.data[0])
+        })
+        setDataReload(false)
+      }
+
+  }, [dataReload]);
 
   const handleCompletedBtn = () => {
     setViewCompleted(true)
@@ -52,15 +64,14 @@ function App() {
   const editToggle = () => setEditModal(!editModal)
 
   const handleDelete = (item) => {
-    setDeleteModal(!deleteModal)
     setCurrentItem(item)
+    setDeleteModal(!deleteModal)
   }
 
   const handleEdit = (item) => {
-    setEditModal(!editModal)
     setCurrentItem(item)
+    setEditModal(!editModal)
   }
-
   const renderItems = () => {
     if (!currentItem)
       return null
@@ -85,12 +96,12 @@ function App() {
             <Button color="danger" onClick={() => handleDelete(item)}>
               Delete
             </Button>
-            <DeleteModal toggle={deleteToggle} modal={deleteModal} item={currentItem}/>
+            <DeleteModal toggle={deleteToggle} modal={deleteModal} item={currentItem} setDataReload={setDataReload}/>
             {' '}
             <Button color="info" onClick={() => handleEdit(item)}>
               Edit
             </Button>
-            <EditModal toggle={editToggle} modal={editModal} item={currentItem} />
+            <EditModal toggle={editToggle} modal={editModal} item={currentItem} setDataReload={setDataReload} />
           </CardBody>
         </Card>
       </div>
@@ -106,7 +117,7 @@ function App() {
         <Button block={true} onClick={addToggle}>
           Add Task
         </Button>
-        <AddModal modal={addModal} toggle={addToggle} item={currentItem} />
+        <AddModal modal={addModal} toggle={addToggle} item={currentItem} setDataReload={setDataReload} />
       
       </div>
 

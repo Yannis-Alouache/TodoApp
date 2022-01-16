@@ -1,3 +1,4 @@
+import axios from "axios"
 import {useState} from "react"
 
 import {
@@ -13,7 +14,28 @@ import {
 } from "reactstrap"
 
 function EditModal(props) {
-    const [isChecked, setIsChecked] = useState(false)
+    const [title, setTitle] = useState(props.item.title)
+    const [description, setDescription] = useState(props.item.description)
+    const [completed, setCompleted] = useState(props.item.completed)
+
+    const handleSubmit = () => {
+      const data = {
+        title: title,
+        description: description,
+        completed: completed
+      }
+
+      const headers = {
+        'Content-Type': 'application/json'
+      }
+
+      axios.put(process.env.REACT_APP_API_URL + "/api/todos/" + props.item.id + "/", data, {
+        headers: headers
+      })
+
+      props.toggle()
+      props.setDataReload(true)
+    }
     
     return (
         <Modal isOpen={props.modal} toggle={props.toggle}>
@@ -30,7 +52,8 @@ function EditModal(props) {
                   id="taskTitle"
                   name="taskTitle"
                   type="text"
-                  value={props.item.title}
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
                 />
               </FormGroup>
               <FormGroup>
@@ -41,12 +64,13 @@ function EditModal(props) {
                   id="taskDescription"
                   name="taskDescription"
                   type="text"
-                  value={props.item.description}
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
                 />
               </FormGroup>
               <FormGroup check>
                 <Label check className="not-selectable pointer">
-                  <Input type="checkbox" checked={props.item.completed ? true : false}/>
+                  <Input type="checkbox" defaultChecked={completed ? true : false} onClick={() => setCompleted(!completed)}/>
                   Completed ?
                 </Label>
               </FormGroup>
@@ -55,7 +79,7 @@ function EditModal(props) {
           <ModalFooter>
             <Button
               color="success"
-              onClick={function noRefCheck(){}}
+              onClick={() => handleSubmit()}
             >
               Submit
             </Button>

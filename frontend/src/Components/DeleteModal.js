@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import axios from "axios"
 import {
     Button,
     Modal,
@@ -7,7 +7,15 @@ import {
     ModalFooter,
   } from "reactstrap"
 
+
 function DeleteModal(props) {
+
+    const handleSubmit = (item) => {
+      axios.delete(process.env.REACT_APP_API_URL + "/api/todos/" + item.id + "/")
+      props.toggle()
+      props.setDataReload(true)
+    }
+
     return (
         <Modal isOpen={props.modal} toggle={props.toggle}>
           <ModalHeader toggle={props.toggle}>
@@ -20,7 +28,7 @@ function DeleteModal(props) {
           <ModalFooter>
             <Button
               color="success"
-              onClick={function noRefCheck(){}}
+              onClick={() => handleSubmit(props.item)}
             >
               Yes
             </Button>

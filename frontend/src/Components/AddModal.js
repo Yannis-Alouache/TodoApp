@@ -35,6 +35,7 @@ function AddModal(props) {
             props.toggle()
             setTitle("")
             setDescription("")
+            props.setDataReload(true)
           }
         })
     }
