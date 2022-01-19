@@ -7,7 +7,7 @@ The db used is SqlLite3
 ![image](https://user-images.githubusercontent.com/57330326/150119036-f7cbd766-0d32-4870-b7c5-7d10dfefdb39.png)
 
 
-You can launch the project by with : 
+You can launch the project with : 
 
 pipenv shell (in root of project to enable virtualenv)
 
