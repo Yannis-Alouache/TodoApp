@@ -1,5 +1,5 @@
 import axios from "axios"
-import {useState} from "react"
+import {useEffect, useState} from "react"
 
 import {
     Button,
@@ -14,9 +14,18 @@ import {
 } from "reactstrap"
 
 function EditModal(props) {
-    const [title, setTitle] = useState(props.item.title)
-    const [description, setDescription] = useState(props.item.description)
-    const [completed, setCompleted] = useState(props.item.completed)
+    const [title, setTitle] = useState('')
+    const [description, setDescription] = useState('')
+    const [completed, setCompleted] = useState('')
+
+    useEffect(() => {
+        if (props.loadEditModal) {
+          setTitle(props.item.title)
+          setDescription(props.item.description)
+          setCompleted(props.item.completed) 
+          props.setLoadEditModal(false)
+        }
+    }, [props])
 
     const handleSubmit = () => {
       const data = {
@@ -40,7 +49,7 @@ function EditModal(props) {
     return (
         <Modal isOpen={props.modal} toggle={props.toggle}>
           <ModalHeader toggle={props.toggle}>
-            Edit Task
+            Edit Task n°{props.item.id}
           </ModalHeader>
           <ModalBody>
             <Form>

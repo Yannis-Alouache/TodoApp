@@ -28,6 +28,7 @@ function App() {
   const [currentItem, setCurrentItem] = useState(null);
 
   const [dataReload, setDataReload] = useState(false)
+  const [loadEditModal, setLoadEditModal] = useState(false)
 
   useEffect(() => {
     getList()
@@ -40,7 +41,6 @@ function App() {
         getList()
         .then(res => {
           setTodoList(res.data)
-          setCurrentItem(res.data[0])
         })
         setDataReload(false)
       }
@@ -70,8 +70,10 @@ function App() {
 
   const handleEdit = (item) => {
     setCurrentItem(item)
+    setLoadEditModal(true)
     setEditModal(!editModal)
   }
+  
   const renderItems = () => {
     if (!currentItem)
       return null
@@ -96,12 +98,24 @@ function App() {
             <Button color="danger" onClick={() => handleDelete(item)}>
               Delete
             </Button>
-            <DeleteModal toggle={deleteToggle} modal={deleteModal} item={currentItem} setDataReload={setDataReload}/>
+            <DeleteModal
+              toggle={deleteToggle}
+              modal={deleteModal}
+              item={currentItem}
+              setDataReload={setDataReload}
+            />
             {' '}
             <Button color="info" onClick={() => handleEdit(item)}>
               Edit
             </Button>
-            <EditModal toggle={editToggle} modal={editModal} item={currentItem} setDataReload={setDataReload} />
+            <EditModal
+              toggle={editToggle}
+              modal={editModal}
+              item={currentItem}
+              setDataReload={setDataReload}
+              setLoadEditModal={setLoadEditModal}
+              loadEditModal={loadEditModal}
+            />
           </CardBody>
         </Card>
       </div>
