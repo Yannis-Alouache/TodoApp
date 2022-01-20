@@ -1,5 +1,5 @@
-import axios from "axios"
 import {useEffect, useState} from "react"
+import { editTask } from "../Services"
 
 import {
     Button,
@@ -27,23 +27,23 @@ function EditModal(props) {
         }
     }, [props])
 
-    const handleSubmit = () => {
+    const handleSubmit = (item) => {
       const data = {
         title: title,
         description: description,
         completed: completed
       }
-
-      const headers = {
-        'Content-Type': 'application/json'
-      }
-
-      axios.put(process.env.REACT_APP_API_URL + "/api/todos/" + props.item.id + "/", data, {
-        headers: headers
+      
+      editTask(item.id, data)
+      .then(res => {
+        if (res.status === 200) {
+          props.toggle()
+          props.setDataReload(true)
+        }
       })
-
-      props.toggle()
-      props.setDataReload(true)
+      .catch((e) => {
+        console.log(e)
+      })
     }
     
     return (
@@ -88,7 +88,7 @@ function EditModal(props) {
           <ModalFooter>
             <Button
               color="success"
-              onClick={() => handleSubmit()}
+              onClick={() => handleSubmit(props.item)}
             >
               Submit
             </Button>

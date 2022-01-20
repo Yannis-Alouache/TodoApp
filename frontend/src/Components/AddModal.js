@@ -1,5 +1,5 @@
 import {useState} from "react"
-import axios from "axios"
+import { postTask } from "../Services"
 
 import {
     Button,
@@ -19,17 +19,11 @@ function AddModal(props) {
 
     const handleSubmit = () => {
         const data = {
-            title: title,
-            description: description
+          title: title,
+          description: description
         }
 
-        const headers = {
-          'Content-Type': 'application/json'
-        }
-
-        axios.post(process.env.REACT_APP_API_URL + "/api/todos/", data, {
-          headers: headers
-        })
+        postTask(data)
         .then(res => {
           if (res.status === 201) {
             props.toggle()
@@ -37,6 +31,9 @@ function AddModal(props) {
             setDescription("")
             props.setDataReload(true)
           }
+        })
+        .catch((e) => {
+          console.log(e)
         })
     }
 

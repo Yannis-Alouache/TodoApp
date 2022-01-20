@@ -1,4 +1,4 @@
-import axios from "axios"
+import { deleteTask } from "../Services"
 import {
     Button,
     Modal,
@@ -11,9 +11,16 @@ import {
 function DeleteModal(props) {
 
     const handleSubmit = (item) => {
-      axios.delete(process.env.REACT_APP_API_URL + "/api/todos/" + item.id + "/")
-      props.toggle()
-      props.setDataReload(true)
+      deleteTask(item.id)
+      .then(res => {
+        if (res.status === 200 || res.status === 204) {
+          props.toggle()
+          props.setDataReload(true)
+        }
+      })
+      .catch((e) => {
+        console.log(e)
+      })
     }
 
     return (
